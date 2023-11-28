@@ -1,8 +1,10 @@
 import React, { useState  } from 'react'; 
-import { View, TextInput, Text, StyleSheet, ScrollView } from 'react-native'; 
+import { View, TextInput, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'; 
 import DropdownComponent from './Components/Dropdown';
 import RadioComponent from './Components/Radiobutton';
 import { Dropdown } from 'react-native-element-dropdown';
+import { Formik } from 'formik';
+ import * as Yup from 'yup';
 
 const data3 = [
   { label: 'Single', value: '14' },
@@ -12,19 +14,81 @@ const data3 = [
 
 
 const App = () => { 
-	const [name, setName] = useState(''); 
-  const [fatherName, setFatheNamer] = useState('');
-  const [motherName, setMotherName] = useState(''); 
+	//const [name, setName] = useState(''); 
+  // const [fatherName, setFatheNamer] = useState('');
+  // const [motherName, setMotherName] = useState(''); 
   const [status, setStatus] = useState('');
-  const [spouseName, setSpouseName] = useState(''); 
-	const [nomineName, setNomineName] = useState(''); 
-  const [pincode, setPincode] = useState(''); 
-  const [city, setCity] = useState(''); 
-  const [state, setState] = useState(''); 
-  const [address1, setAddress1] = useState(''); 
-  const [address2, setAddress2] = useState(''); 
+  // const [spouseName, setSpouseName] = useState(''); 
+	// const [nomineName, setNomineName] = useState(''); 
+  // const [pincode, setPincode] = useState(''); 
+  // const [city, setCity] = useState(''); 
+  // const [state, setState] = useState(''); 
+  // const [address1, setAddress1] = useState(''); 
+  // const [address2, setAddress2] = useState(''); 
+
+  const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(8, 'Too Short!')
+      .max(16, 'Too Long!')
+      .required('Please enter your name same as in PAN card'),
+      fatherName: Yup.string()
+      .min(8, 'Too Short!')
+      .max(30, 'Too Long!')
+      .required('Required'),
+      motherName: Yup.string()
+      .min(8, 'Too Short!')
+      .max(30, 'Too Long!')
+      .required('Required'),
+      spouseName: Yup.string()
+      .min(8, 'Too Short!')
+      .max(30, 'Too Long!')
+      .required('Required'),
+      nomineName: Yup.string()
+      .min(8, 'Too Short!')
+      .max(30, 'Too Long!')
+      .required('Required'),
+      pincode: Yup.string()
+      .min(6, 'Too Short!')
+      .max(10, 'Too Long!')
+      .required('Required'),
+      city: Yup.string()
+      .min(8, 'Too Short!')
+      .max(16, 'Too Long!')
+      .required('Required'),
+      state: Yup.string()
+      .min(8, 'Too Short!')
+      .max(16, 'Too Long!')
+      .required('Required'),
+      address1: Yup.string()
+      .min(8, 'Too Short!')
+      .max(16, 'Too Long!')
+      .required('Required'),
+      address2: Yup.string()
+      .min(8, 'Too Short!')
+      .max(16, 'Too Long!')
+      .required('Required'),
+  });
+
 	return ( 
     
+    <Formik initialValues={{
+      name:"",
+      fatherName:"",
+      motherName:"",
+      spouseName:"",
+      nomineName:"",
+      pincode:"",
+      city:"",
+      state:"",
+      address1:"",
+      address2:""
+
+   }} validationSchema={SignupSchema}
+       onSubmit={values => {
+         console.log(values);
+       }}
+    >
+      {({values,errors,touched,handleChange})=>(
 		<View style={styles.container}> 
     <ScrollView style={{ backgroundColor: 'white', marginHorizontal:10 }}>
     
@@ -32,23 +96,32 @@ const App = () => {
 			<TextInput 
 				style={styles.input} 
 				placeholder="Name on your PAN card"
-				value={name} 
-				onChangeText={name=>setName(name)} 
+				value={values.name} 
+				onChangeText={handleChange('name')} 
 			/> 
+      {touched.name && errors.name &&(
+        <Text style={styles.errortext}>{errors.name}</Text>
+      ) }
       <DropdownComponent />
 			
 			<TextInput 
 				style={styles.input} 
 				placeholder="Enter your Father Name"
-				value={fatherName} 
-				onChangeText={fatherName=>setFatheNamer(fatherName)} 
+				value={values.fatherName} 
+				onChangeText={handleChange('fatherName')} 
 			/> 
+       {errors.fatherName &&(
+        <Text style={styles.errortext}>{errors.fatherName}</Text>
+      ) }
       <TextInput 
 				style={styles.input} 
 				placeholder="Enter your Mother Name"
-				value={motherName} 
-				onChangeText={motherName=>setMotherName(motherName)} 
+				value={values.motherName} 
+				onChangeText={handleChange('motherName')} 
 			/> 
+       {touched.motherName && errors.motherName &&(
+        <Text style={styles.errortext}>{errors.motherName}</Text>
+      ) }
       <Text style={styles.text1}>What do you want to print on Your Card ?</Text>
       <RadioComponent />
       <Dropdown
@@ -72,10 +145,12 @@ const App = () => {
       <TextInput 
 				style={styles.input} 
 				placeholder="Enter your Spouse Name"
-				value={spouseName} 
-				onChangeText={spouseName=>setSpouseName(spouseName)} 
+				value={values.spouseName} 
+				onChangeText={handleChange('spouseName')} 
 			/> 
-
+       {touched.spouseName && errors.spouseName &&(
+        <Text style={styles.errortext}>{errors.spouseName}</Text>
+      ) }
      <Text style={styles.text1}>Your Nominee Details</Text>
 
 
@@ -85,46 +160,67 @@ const App = () => {
        <TextInput  
 				style={styles.input} 
 				placeholder="Enter your Nominee Name"
-				value={nomineName} 
-				onChangeText={nomineName=>setNomineName(nomineName)} 
+				value={values.nomineName} 
+				onChangeText={handleChange('nomineeName')} 
 			/> 
+       {/* {touched.nomineName && errors.nomineName &&(
+        <Text style={styles.errortext}>{errors.nomineName}</Text>
+      ) } */}
       <TextInput  
 				style={styles.input} 
 				placeholder="Enter your PinCode"
-				value={pincode} 
-				onChangeText={pincode=>setPincode(pincode)} 
+				value={values.pincode} 
+				onChangeText={handleChange('pincode')} 
 			/> 
+       {/* {errors.pincode &&(
+        <Text style={styles.errortext}>{errors.pincode}</Text>
+      ) } */}
       <TextInput  
 				style={styles.input} 
 				placeholder="Enter your City"
-				value={city} 
-				onChangeText={city=>setCity(city)} 
+				value={values.city} 
+				onChangeText={handleChange('city')} 
 			/> 
-      
+       {/* {errors.city &&(
+        <Text style={styles.errortext}>{errors.city}</Text>
+      ) } */}
       <TextInput  
 				style={styles.input} 
 				placeholder="Enter your State"
-				value={state} 
-				onChangeText={state=>setState(state)} 
+				value={values.state} 
+				onChangeText={handleChange('state')} 
 			/> 
+       {/* {errors.state &&(
+        <Text style={styles.errortext}>{errors.state}</Text>
+      ) } */}
        <TextInput  
 				style={styles.input} 
 				placeholder="Enter your Address line 1"
-				value={address1} 
-				onChangeText={address1=>setAddress1(address1)} 
+				value={values.address1} 
+				onChangeText={handleChange('address1')} 
 			/>
+       {/* {errors.address1 &&(
+        <Text style={styles.errortext}>{errors.address1}</Text>
+      ) } */}
        <TextInput  
 				style={styles.input} 
 				placeholder="Enter your Address"
-				value={address2} 
-				onChangeText={address2=>setAddress2(address2)} 
+				value={values.address2} 
+				onChangeText={handleChange('address2')} 
 			/>
+       {/* {errors.address2 &&(
+        <Text style={styles.errortext}>{errors.address2}</Text>
+      ) } */}
          </View>
       </View> 
-		
+		<TouchableOpacity onPress={()=>{}} style={styles.submitbtn}>
+      <Text style={styles.submitbtntext}>SUBMIT</Text>
+    </TouchableOpacity>
     </ScrollView>
     </View> 
-
+    
+    )}
+    </Formik>
     
 	); 
 }; 
@@ -180,6 +276,22 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
   },
+  submitbtn: {
+backgroundColor :"red",
+padding:10,
+borderRadius:10,
+justifyContent:"center"
+  },
+  submitbtntext:{
+    color:"#fff",
+    textAlign:"center",
+    fontSize:18,
+
+  },
+  errortext:{
+    fontSize:14,
+    color:"#FF0D10"
+  }
 	
 }); 
 
